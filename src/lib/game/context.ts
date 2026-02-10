@@ -1,4 +1,4 @@
-import { setContext, getContext } from "svelte";
+import { setContext } from "svelte";
 
 export type CanvasSize = {
   width: number;
@@ -28,7 +28,8 @@ export type Brick = {
   y: number;
   width: number;
   height: number;
-  status: number; // 0 = разрушен, 1 = цел
+  status: number;
+  color?: string;
 };
 
 export type Input = {
@@ -36,22 +37,47 @@ export type Input = {
   leftPressed: boolean;
 };
 
-type GameState = {
+export type GameState = {
   ctx: CanvasRenderingContext2D;
   canvas: CanvasSize;
   ball: Ball;
   paddle: Paddle;
+  bricks: Brick[];
   input: Input;
-  lives: number;
-  score: number;
 };
 
-const GAME_KEY = Symbol("game");
+export const GAME_KEY = Symbol('game');
 
-export function setGameState(state: GameState): void {
-  setContext(GAME_KEY, state);
+// Функция для инициализации кирпичей
+export function initBricks(): Brick[] {
+  const brickRowCount = 3;
+  const brickColumnCount = 5;
+  const brickWidth = 75;
+  const brickHeight = 20;
+  const brickPadding = 10;
+  const brickOffsetTop = 30;
+  const brickOffsetLeft = 30;
+  const bricks: Brick[] = [];
+
+  for (let c = 0; c < brickColumnCount; c++) {
+    for (let r = 0; r < brickRowCount; r++) {
+      const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+      const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+      const hue = (r * 60) % 360;
+
+      bricks.push({
+        x: brickX,
+        y: brickY,
+        width: brickWidth,
+        height: brickHeight,
+        status: 1,
+        color: `hsl(${hue}, 100%, 50%)`
+      });
+    }
+  }
+
+  return bricks;
 }
 
-export function getGameState(): GameState {
-  return getContext(GAME_KEY) as GameState;
-}
+// Экспортируем setContext напрямую
+export { setContext };

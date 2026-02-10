@@ -1,16 +1,10 @@
 import { drawCircle, drawRect } from "$lib/canvas/shapes";
-import { checkWallCollision, checkPaddleCollision } from "./collision";
-import { type Ball, type Paddle, type Input, type CanvasSize } from "./context";
+import { type Ball, type Paddle, type Input } from "./context";
 
 const PADDLE_SPEED = 7;
-// Update
-export function updateBall(
-  ball: Ball,
-  paddle: Paddle,
-  canvas: CanvasSize,
-): void {
-  checkWallCollision(ball, canvas);
-  checkPaddleCollision(ball, paddle, canvas.height);
+
+// Update - только движение мяча
+export function updateBall(ball: Ball): void {
   ball.x += ball.dx;
   ball.y += ball.dy;
 }

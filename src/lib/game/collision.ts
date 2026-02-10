@@ -7,32 +7,27 @@ export function checkPaddleCollision(
 ): void {
   const paddleY = canvasHeight - paddle.size.height;
 
+  // if (
+  //   ball.x > paddle.x &&
+  //   ball.x < paddle.x + paddle.size.width &&
+  //   ball.y + ball.dy > paddleY - ball.radius &&
+  //   ball.y < paddleY
+  // ) {
+  //   ball.dy = -ball.dy;
+  // }
   if (
+    ball.y + ball.radius > paddleY &&
     ball.x > paddle.x &&
-    ball.x < paddle.x + paddle.size.width &&
-    ball.y + ball.dy > paddleY - ball.radius &&
-    ball.y < paddleY
+    ball.x < paddle.x + paddle.size.width
   ) {
-    ball.dy = -ball.dy;
-  }
-}
+    // Ударяемся о верхнюю часть платформы
+    ball.dy = -Math.abs(ball.dy);
 
-// Проверка коллизии с кирпичами (Step 6)
-export function checkBrickCollision(ball: Ball, brick: Brick): boolean {
-  if (brick.status === 0) return false; // Кирпич уже разрушен
-
-  if (
-    ball.x > brick.x &&
-    ball.x < brick.x + brick.width &&
-    ball.y > brick.y &&
-    ball.y < brick.y + brick.height
-  ) {
-    ball.dy = -ball.dy;
-    brick.status = 0; // Разрушаем кирпич
-    return true; // Коллизия произошла
+    // Добавляем немного физики - угол отскока зависит от места удара
+    const hitPoint = (ball.x - paddle.x) / paddle.size.width;
+    ball.dx = 5 * (hitPoint - 0.5); // -2.5 до 2.5
   }
 
-  return false;
 }
 
 // Проверка коллизии мяча со стенами
@@ -55,5 +50,40 @@ export function checkWallCollision(ball: Ball, canvas: CanvasSize): void {
 // Проверка Game Over
 // Game Over - мяч ниже платформы
 export function checkGameOver(ball: Ball, canvas: CanvasSize): boolean {
-  return ball.y + ball.dy > canvas.height - ball.radius;
+  // return ball.y + ball.dy > canvas.height - ball.radius;
+  return ball.y + ball.radius > canvas.height;
 }
+
+
+// Проверка коллизии с кирпичами (Step 6)
+export function checkBrickCollision(ball: Ball, brick: Brick): boolean {
+  if (brick.status === 0) return false; // Кирпич уже разрушен
+
+  if (
+    ball.x > brick.x &&
+    ball.x < brick.x + brick.width &&
+    ball.y > brick.y &&
+    ball.y < brick.y + brick.height
+  ) {
+    ball.dy = -ball.dy;
+    brick.status = 0; // Разрушаем кирпич
+    return true; // Коллизия произошла
+  }
+
+  return false;
+}
+
+// Новая функция для проверки столкновений мяча с объектами
+// export function checkAllCollisions(
+//   ball: Ball,
+//   paddle: Paddle,
+//   bricks: Brick[],
+//   canvas: CanvasSize,
+//   canvasHeight: number
+// ): { brickHit: boolean; brickScore: number } {
+//   checkWallCollision(ball, canvas);
+//   checkPaddleCollision(ball, paddle, canvasHeight);
+//
+//   // Проверяем столкновения с кирпичами
+//   return handleBrickCollisions(ball, bricks);
+// }

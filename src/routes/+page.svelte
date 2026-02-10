@@ -1,14 +1,21 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { setGameState } from "$lib/game/context";
+  import {
+    setContext,
+    initBricks,
+    GAME_KEY,
+    type GameState,
+  } from "$lib/game/context";
   import Game from "$lib/game/Game.svelte";
 
   let canvasElement: HTMLCanvasElement;
-  let isReady = false;
+  let isGameReady = false;
 
   onMount(() => {
     const ctx = canvasElement.getContext("2d") as CanvasRenderingContext2D;
-    setGameState({
+    const bricks = initBricks();
+
+    const gameState: GameState = {
       ctx,
       canvas: {
         width: canvasElement.width,
@@ -28,23 +35,37 @@
           height: 10,
         },
       },
+      bricks,
       input: { rightPressed: false, leftPressed: false },
-      lives: 3,
-      score: 0,
-    });
+    };
 
-    isReady = true;
+    setContext(GAME_KEY, gameState);
+    isGameReady = true;
   });
 </script>
 
-<canvas bind:this={canvasElement} width="480" height="320"></canvas>
-{#if isReady}<Game />{/if}
+<canvas bind:this={canvasElement} width={480} height={320} class="game-canvas"
+></canvas>
+
+{#if isGameReady}
+  <Game />
+{/if}
 
 <style global>
-  canvas {
+  .game-canvas {
     background: #eee;
     display: block;
     margin: 0 auto;
     touch-action: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
   }
 </style>

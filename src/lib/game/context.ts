@@ -1,3 +1,4 @@
+// Path to file: src/lib/game/context.ts
 import { setContext } from "svelte";
 
 export type CanvasSize = {

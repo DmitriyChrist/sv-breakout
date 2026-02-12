@@ -1,4 +1,5 @@
 <script lang="ts">
+  // Path to file: src/lib/game/GameLoop.svelte
   import { onMount } from "svelte";
   import {
     updateBall,

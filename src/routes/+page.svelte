@@ -1,4 +1,5 @@
 <script lang="ts">
+  // Path to file: src/routes/+page.svelte
   import { onMount } from "svelte";
   import {
     setContext,

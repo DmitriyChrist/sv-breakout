@@ -1,4 +1,5 @@
 <script lang="ts">
+  // Path to file: src/lib/game/Game.svelte
   import { onMount, getContext } from "svelte";
   import { GAME_KEY, type GameState } from "./context";
   import { gameStore } from "./gameStore";

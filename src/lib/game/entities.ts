@@ -1,3 +1,4 @@
+// Path to file: src/lib/game/entities.ts
 import { drawCircle, drawRect } from "$lib/canvas/shapes";
 import { type Ball, type Paddle, type Input } from "./context";
 

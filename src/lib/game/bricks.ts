@@ -1,3 +1,4 @@
+// Path to file: src/lib/game/bricks.ts
 import type { Brick, Ball } from "./context";
 import { drawRect } from "$lib/canvas/shapes";
 

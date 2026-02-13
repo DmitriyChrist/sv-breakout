@@ -1,55 +1,21 @@
+<!-- src/routes/+page.svelte -->
 <script lang="ts">
-  // Path to file: src/routes/+page.svelte
   import { onMount } from "svelte";
-  import {
-    setContext,
-    initBricks,
-    GAME_KEY,
-    type GameState,
-  } from "$lib/game/context";
   import Game from "$lib/game/Game.svelte";
 
   let canvasElement: HTMLCanvasElement;
-  let isGameReady = false;
+  let isCanvasReady = false;
 
   onMount(() => {
-    const ctx = canvasElement.getContext("2d") as CanvasRenderingContext2D;
-    const bricks = initBricks();
-
-    const gameState: GameState = {
-      ctx,
-      canvas: {
-        width: canvasElement.width,
-        height: canvasElement.height,
-      },
-      ball: {
-        x: canvasElement.width / 2,
-        y: canvasElement.height - 35,
-        dx: 2,
-        dy: -2,
-        radius: 10,
-      },
-      paddle: {
-        x: (canvasElement.width - 75) / 2,
-        size: {
-          width: 75,
-          height: 10,
-        },
-      },
-      bricks,
-      input: { rightPressed: false, leftPressed: false },
-    };
-
-    setContext(GAME_KEY, gameState);
-    isGameReady = true;
+    isCanvasReady = true;
   });
 </script>
 
 <canvas bind:this={canvasElement} width={480} height={320} class="game-canvas"
 ></canvas>
 
-{#if isGameReady}
-  <Game />
+{#if isCanvasReady}
+  <Game canvas={canvasElement} />
 {/if}
 
 <style global>

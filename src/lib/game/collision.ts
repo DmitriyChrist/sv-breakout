@@ -1,4 +1,4 @@
-import { type Ball, type Paddle, type Brick, type CanvasSize } from "./context";
+import { type Ball, type Paddle, type Brick, type CanvasSize } from "./types";
 // Path to file: src/lib/game/collision.ts
 // Проверка коллизии мяча с платформой (Step 4)
 export function checkPaddleCollision(

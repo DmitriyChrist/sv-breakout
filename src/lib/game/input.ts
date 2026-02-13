@@ -1,15 +1,7 @@
-import type { Input, Paddle } from "./context";
-import { gameStore } from "./gameStore";
-
+import type { Input, Paddle } from "./types";
+import { Engine } from "./Engine.ts"
 export function setupKeyboard(input: Input): () => void {
   const keyDownHandler = (e: KeyboardEvent) => {
-    // Управление паузой по Space или P
-    if (e.key === " " || e.key === "p" || e.key === "P") {
-      e.preventDefault();
-      gameStore.togglePause();
-      return;
-    }
-
     if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
       input.rightPressed = true;
     } else if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {

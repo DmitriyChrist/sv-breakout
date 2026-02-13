@@ -1,6 +1,12 @@
 // Path to file: src/lib/game/bricks.ts
-import type { Brick, Ball } from "./context";
+import type { Brick, Ball } from "./types";
 import { drawRect } from "$lib/canvas/shapes";
+
+
+
+export function allBricksDestroyed(bricks: Brick[]): boolean {
+  return bricks.every(brick => brick.status === 0);
+}
 
 // Рендер кирпича
 export function renderBrick(ctx: CanvasRenderingContext2D, brick: Brick): void {

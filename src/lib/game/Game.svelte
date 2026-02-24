@@ -83,5 +83,96 @@
 </div>
 
 <style>
-  /* стили без изменений */
+  .game-container {
+    position: relative;
+    width: 480px;
+    height: 320px;
+    margin: 0 auto;
+  }
+
+  .game-controls {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+  }
+
+  .pause-btn {
+    padding: 8px 16px;
+    background: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .pause-btn:hover {
+    background: #1976d2;
+  }
+
+  .game-stats {
+    display: flex;
+    gap: 20px;
+    color: #333;
+    font-weight: bold;
+  }
+
+  .score {
+    color: #4caf50;
+  }
+
+  .lives {
+    color: #f44336;
+  }
+
+  .game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    text-align: center;
+    z-index: 100;
+    min-width: 300px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .game-over h2 {
+    margin: 0 0 1rem 0;
+    font-size: 2rem;
+    color: #ffd700;
+  }
+
+  .game-over .score {
+    font-size: 1.5rem;
+    margin: 1rem 0;
+    color: #4caf50;
+  }
+
+  .restart-btn {
+    margin-top: 1.5rem;
+    padding: 12px 24px;
+    background: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: all 0.2s;
+  }
+
+  .restart-btn:hover {
+    background: #45a049;
+    transform: scale(1.05);
+  }
 </style>

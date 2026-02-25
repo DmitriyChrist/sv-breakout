@@ -1,31 +1,9 @@
 <!-- src/routes/+page.svelte -->
-<script lang="ts">
-  import Game from "$lib/game/Game.svelte";
-  let canvasElement: HTMLCanvasElement;
+<script>
 </script>
 
-<canvas bind:this={canvasElement} width={480} height={320} class="game-canvas"
-></canvas>
+<a href="/docs">Главная</a>
+<a href="/engine">Игра</a>
 
-{#if canvasElement}
-  <Game canvas={canvasElement} />
-{/if}
-
-<style global>
-  .game-canvas {
-    background: #eee;
-    display: block;
-    margin: 0 auto;
-    touch-action: none;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  * {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-  }
+<style>
 </style>

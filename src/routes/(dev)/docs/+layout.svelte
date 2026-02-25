@@ -17,7 +17,7 @@
 
 <!-- eslint-disable svelte/no-navigation-without-resolve -->
 <nav>
-  <a href="/dev/docs">Главная</a>
+  <a href="/docs">Главная</a>
   <a href="/docs/main">Новая</a>
   <a href="/">Игра</a>
 </nav>

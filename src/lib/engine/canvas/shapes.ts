@@ -1,4 +1,3 @@
-// Path to file: src/lib/canvas/shapes.ts
 export type CanvasCtx = CanvasRenderingContext2D;
 
 export function drawRect(

@@ -1,6 +1,6 @@
 // Path to file: src/lib/game/entities.ts
-import { drawCircle, drawRect } from "$lib/engine/canvas/shapes";
-import { type Ball, type Paddle, type Input } from "./types";
+import { drawCircle, drawRect } from "$lib/context/canvas/shapes";
+import { type Ball, type Paddle, type Input } from "./context";
 
 const PADDLE_SPEED = 7;
 

@@ -11,7 +11,7 @@
   import { renderBricks, handleBrickCollisions } from "./bricks";
   import { drawText } from "$lib/canvas/shapes";
   import type { GameState } from "./context";
-  import { gameStore } from "./gameStore";
+  import { gameStore, uiState } from "./gameStore.svelte";
 
   export let gameState: GameState;
 
@@ -20,9 +20,7 @@
     const { ctx, canvas, ball, paddle, input, bricks } = gameState;
 
     function gameLoop() {
-      const state = gameStore.getState();
-
-      if (state.gameOver) {
+      if (uiState.gameOver) {
         if (animationId) {
           cancelAnimationFrame(animationId);
         }
@@ -31,7 +29,7 @@
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      if (!state.paused) {
+      if (!uiState.paused) {
         updatePaddle(paddle, input, canvas.width);
         updateBall(ball);
 
@@ -51,8 +49,7 @@
         if (ball.y + ball.radius > canvas.height) {
           gameStore.decrementLives();
 
-          const newState = gameStore.getState();
-          if (newState.gameOver) {
+          if (uiState.gameOver) {
             cancelAnimationFrame(animationId);
             return;
           } else {
@@ -65,30 +62,21 @@
         }
       }
 
-      const currentState = gameStore.getState();
-
       renderBricks(ctx, bricks);
       renderPaddle(ctx, paddle, canvas.height);
       renderBall(ctx, ball);
 
-      drawText(
-        ctx,
-        `Score: ${currentState.score}`,
-        8,
-        20,
-        "16px Arial",
-        "#000",
-      );
-      drawText(
-        ctx,
-        `Lives: ${currentState.lives}`,
-        canvas.width - 65,
-        20,
-        "16px Arial",
-        "#000",
-      );
+      // drawText(ctx, `Score: ${uiState.score}`, 8, 20, "16px Arial", "#000");
+      // drawText(
+      //   ctx,
+      //   `Lives: ${uiState.lives}`,
+      //   canvas.width - 65,
+      //   20,
+      //   "16px Arial",
+      //   "#000",
+      // );
 
-      if (currentState.paused) {
+      if (uiState.paused) {
         drawText(
           ctx,
           "PAUSED",

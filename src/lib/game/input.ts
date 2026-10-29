@@ -1,5 +1,5 @@
 import type { Input, Paddle } from "./context";
-import { gameStore } from "./gameStore";
+import { gameStore, uiState } from "./gameStore.svelte";
 
 export function setupKeyboard(input: Input): () => void {
   const keyDownHandler = (e: KeyboardEvent) => {

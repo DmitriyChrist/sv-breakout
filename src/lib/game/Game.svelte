@@ -2,96 +2,78 @@
   // Path to file: src/lib/game/Game.svelte
   import { onMount, getContext } from "svelte";
   import { GAME_KEY, type GameState } from "./context";
-  import { gameStore } from "./gameStore";
+  import { uiState, gameStore } from "./gameStore.svelte";
   import { setupKeyboard, setupTouch } from "./input";
   import GameLoop from "./GameLoop.svelte";
 
+  let { onRestart }: { onRestart?: () => void } = $props();
+
   const gameState = getContext<GameState>(GAME_KEY);
-
-  // Локальные переменные для отображения
-  let gameOver = false;
-  let win = false;
-  let paused = false;
-  let score = 0;
-  let lives = 3;
-
-  // Функция для обновления локальных переменных
-  function updateUI() {
-    const state = gameStore.getState();
-    gameOver = state.gameOver;
-    win = state.win;
-    paused = state.paused;
-    score = state.score;
-    lives = state.lives;
-  }
 
   // Подписываемся на обновления
   onMount(() => {
-    gameStore.onUpdate(() => {
-      updateUI();
-    });
+    // gameStore.onUpdate(() => {
+    //   updateUI();
+    // });
 
-    if (gameState) {
-      const cleanupKeyboard = setupKeyboard(gameState.input);
-      const cleanupTouch = setupTouch(
-        gameState.ctx.canvas,
-        gameState.paddle,
-        gameState.canvas.width,
-      );
+    if (!gameState) return;
+    const cleanupKeyboard = setupKeyboard(gameState.input);
+    const cleanupTouch = setupTouch(
+      gameState.ctx.canvas,
+      gameState.paddle,
+      gameState.canvas.width,
+    );
 
-      return () => {
-        cleanupKeyboard();
-        cleanupTouch();
-        // Не отписываемся - это проще
-      };
-    }
+    return () => {
+      cleanupKeyboard();
+      cleanupTouch();
+      // Не отписываемся - это проще
+    };
   });
 
   // Инициализируем UI
-  updateUI();
+  // updateUI();
 
   function handleRestart() {
     gameStore.reset();
-    updateUI();
 
     if (gameState) {
-      gameState.bricks.forEach((brick) => (brick.status = 1));
+      gameState.bricks.forEach((b) => (b.status = 1));
       gameState.ball.x = gameState.canvas.width / 2;
       gameState.ball.y = gameState.canvas.height - 35;
       gameState.ball.dx = 2;
       gameState.ball.dy = -2;
       gameState.paddle.x =
         (gameState.canvas.width - gameState.paddle.size.width) / 2;
+      // ⚠️ сброс input — чтобы «зажатая» клавиша не тянула платформу
+      gameState.input.leftPressed = false;
+      gameState.input.rightPressed = false;
     }
+
+    onRestart?.(); // ← триггерит {#key} в родителе
   }
 </script>
 
 <!-- остальной код без изменений -->
 <div class="game-container">
   {#if gameState}
-    {#if !gameOver}
+    {#if !uiState.gameOver}
       <div class="game-controls">
-        <button
-          on:click={() => {
-            gameStore.togglePause();
-            updateUI();
-          }}
-          class="pause-btn"
-        >
-          {paused ? "▶ Resume" : "⏸ Pause"}
+        <button onclick={() => gameStore.togglePause()} class="pause-btn">
+          {uiState.paused ? "▶ Resume" : "⏸ Pause"}
         </button>
         <div class="game-stats">
-          <span class="score">Score: {score}</span>
-          <span class="lives">Lives: {lives}</span>
+          <span class="score">Score: {uiState.score}</span>
+          <span class="lives">Lives: {uiState.lives}</span>
         </div>
       </div>
 
       <GameLoop {gameState} />
     {:else}
       <div class="game-over">
-        <h2>{win ? "🎉 You Win!" : "💀 Game Over!"}</h2>
-        <p class="score">Final Score: {score}</p>
-        <button on:click={handleRestart} class="restart-btn">
+        <h2>{uiState.win ? "🎉 You Win!" : "💀 Game Over!"}</h2>
+        <p class="score">Final Score: {uiState.score}</p>
+        <button onclick={handleRestart} class="restart-btn">
           Play Again
         </button>
       </div>
@@ -102,23 +84,29 @@
 <style>
   .game-container {
     position: relative;
-    width: 480px;
-    height: 320px;
+    display: inline-block;
+    max-width: 100%;
     margin: 0 auto;
   }
 
   .game-controls {
     position: absolute;
-    top: -40px;
+    top: 0;
     left: 0;
     right: 0;
+    padding: 8px 12px;
+    box-sizing: border-box;
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 10;
+    pointer-events: none;
+    max-width: 480px; /* совпадает с canvas */
+    margin: 0 auto;
   }
 
   .pause-btn {
+    pointer-events: auto;
     padding: 8px 16px;
     background: #2196f3;
     color: white;
@@ -134,62 +122,19 @@
   }
 
   .game-stats {
+    padding-inline: 30px;
     display: flex;
     gap: 20px;
     color: #333;
     font-weight: bold;
+    pointer-events: none;
+    font-size: clamp(12px, 3vw, 16px);
   }
 
   .score {
     color: #4caf50;
   }
-
   .lives {
     color: #f44336;
-  }
-
-  .game-over {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.9);
-    color: white;
-    padding: 2.5rem;
-    border-radius: 12px;
-    text-align: center;
-    z-index: 100;
-    min-width: 300px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  }
-
-  .game-over h2 {
-    margin: 0 0 1rem 0;
-    font-size: 2rem;
-    color: #ffd700;
-  }
-
-  .game-over .score {
-    font-size: 1.5rem;
-    margin: 1rem 0;
-    color: #4caf50;
-  }
-
-  .restart-btn {
-    margin-top: 1.5rem;
-    padding: 12px 24px;
-    background: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold;
-    transition: all 0.2s;
-  }
-
-  .restart-btn:hover {
-    background: #45a049;
-    transform: scale(1.05);
   }
 </style>

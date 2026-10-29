@@ -5,8 +5,11 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build",
-		"preview": "vite preview",
+    "dev:force": "vite dev --force",
+    "build": "vite build",
+    "preview": "vite preview",
+    "clean": "rm -rf node_modules/.vite dist",
+    "clean:all": "rm -rf node_modules/.vite dist node_modules && npm install",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",

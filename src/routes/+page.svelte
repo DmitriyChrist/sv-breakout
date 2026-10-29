@@ -1,5 +1,4 @@
 <script lang="ts">
-  // Path to file: src/routes/+page.svelte
   import { onMount } from "svelte";
   import {
     setContext,
@@ -11,6 +10,7 @@
 
   let canvasElement: HTMLCanvasElement;
   let isGameReady = false;
+  let gameKey = 0;
 
   onMount(() => {
     const ctx = canvasElement.getContext("2d") as CanvasRenderingContext2D;
@@ -18,10 +18,7 @@
 
     const gameState: GameState = {
       ctx,
-      canvas: {
-        width: canvasElement.width,
-        height: canvasElement.height,
-      },
+      canvas: { width: canvasElement.width, height: canvasElement.height },
       ball: {
         x: canvasElement.width / 2,
         y: canvasElement.height - 35,
@@ -31,10 +28,7 @@
       },
       paddle: {
         x: (canvasElement.width - 75) / 2,
-        size: {
-          width: 75,
-          height: 10,
-        },
+        size: { width: 75, height: 10 },
       },
       bricks,
       input: { rightPressed: false, leftPressed: false },
@@ -45,28 +39,48 @@
   });
 </script>
 
-<canvas bind:this={canvasElement} width={480} height={320} class="game-canvas"
+{#if !isGameReady}
+  <div class="loading">Загрузка...</div>
+{/if}
+
+<canvas
+  bind:this={canvasElement}
+  width={480}
+  height={320}
+  class="game-canvas"
+  class:hidden={!isGameReady}
 ></canvas>
 
 {#if isGameReady}
-  <Game />
+  {#key gameKey}
+    <Game onRestart={() => gameKey++} />
+  {/key}
 {/if}
 
-<style global>
+<style>
   .game-canvas {
-    background: #eee;
     display: block;
     margin: 0 auto;
+    width: 100%;
+    height: auto;
+    max-width: 480px;
+    background: #eee;
     touch-action: none;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
   }
+  .game-canvas.hidden {
+    visibility: hidden;
+  }
 
-  * {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
+  .loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eee;
   }
 </style>
